@@ -40,6 +40,14 @@ $(document).ready(function () {
         $(".player-"+ player +" .pit:eq("+ index +")").find("a").text(value);
     }
 
+    function checkplayeractive() {
+        if(player1state != ""){
+            return "Player 1"
+        }else if(player2state != ""){
+            return "Player 2"
+        }
+    }
+
      function changlePlayer(playerID) {
 
         $(".player").removeClass("active");
@@ -87,198 +95,233 @@ $(document).ready(function () {
 
      });
 
-     $(".pit").on("click", function () {
+     $("#gamereset").on("click", function () {
+        
+        $(".player-one.store").find("a").text(0);
+        $(".player-two.store").find("a").text(0);
 
-        if($(this).hasClass("inactive") || gameState != "started"){
-            alert("NO PERMISSION");        
+        $(".player").removeClass("active");
+
+        if ( $(".player-one .pit").hasClass("inactive")) {
+            $(".player-one .pit").removeClass("inactive");
         }
-        else{
-            const pitValue = $(this).find("a").text()
+        if ( $(".player-two .pit").hasClass("inactive")) {
+            $(".player-two .pit").removeClass("inactive");
+        }
 
-            if((player1state === "playing") || (player1state === "Landed on Big Pit")){
-                let pitIndex = $(this).index('.player-one .pit');
-                let n2 = 0;
+        const stones = Math.floor(nStones/nPits);
 
-                $(this).find("a").text(0);
+        $(".player-one .pit").find("a").text(stones);
+        $(".player-two .pit").find("a").text(stones);
 
-                for (let index = 0; index < pitValue; index++) {
-
-                    if(pitIndex == 0){ // He is on the big pit now 
-                        if (n2 > 0) {
-                            
-                            // Landing on player 2 board
-
-                            let pit2index = n2 - 1;
+        player1state = ""
+        player2state = ""
 
 
-                            let nnextpit = $(".player-two .pit:eq("+ pit2index +")").find("a").text()
+     });
 
-                            nnextpit++; 
-                            
-                            changepitvalue("two", pit2index, nnextpit);
-                            n2++;
+     function PlayerOnePlay(pitRocks,pitLocationOnTheBoard) {
 
 
-                           
-                            if (index+1 == pitValue){ 
-                                changlePlayer(2)
-                            }
+        let n2 = 0;
 
-                        }else{
-                            
-                            // Landing on the big pit
-                            let nstore = $(".player-one.store").find("a").text();
-                            nstore++; // put a stone on the big pit
-                            $(".player-one.store").find("a").text(nstore);
-                            n2++;
-                            player1state = "Landed on Big Pit"
+        for (let index = 0; index < pitRocks; index++) {
 
-                        }
-
-                    }
-                    else{
-                        pitIndex--;
-                        
-                        let nprevpit = $(".player-one .pit:eq("+ pitIndex +")").find("a").text()
-                       
-
-                        // alert("pitvalue: "+pitValue+"; index: " + (index+1));
-                        if ((pitValue == index+1)){ 
-                            // alert("landed on own pit")
-
-                            if(nprevpit == 0){
-                                let nplayer2pit = $(".player-two .pit:eq("+ pitIndex +")").find("a").text()
-
-                                if(nplayer2pit > 0){
-                                    let scoretoadd = parseInt(nplayer2pit) + 1;
-                                
-                                    addScorePit("one",(scoretoadd));
-
-                                    changepitvalue("two", pitIndex, 0);
-                                    changepitvalue("one", pitIndex, 0);
-                                }
-                                else{
-                                    nprevpit++;
-                                    changepitvalue("one", pitIndex, nprevpit)
-                                }
-                                
-                              
-                            }
-                            else{
-                                nprevpit++;
-                                changepitvalue("one", pitIndex, nprevpit);
-                            }
-
-
-                            changlePlayer(2)
-
-                          
-                           
-                        }else{
-                            nprevpit++;
-                            changepitvalue("one", pitIndex, nprevpit);
-                        }
-
-                       
+            if(pitLocationOnTheBoard == 0){ // He is on the big pit now 
+                if (n2 > 0) {
                     
+                    // Landing on player 2 board
+
+                    let pit2index = n2 - 1;
+
+
+                    let nnextpit = $(".player-two .pit:eq("+ pit2index +")").find("a").text()
+
+                    nnextpit++; 
+                    
+                    changepitvalue("two", pit2index, nnextpit);
+                    n2++;
+
+
+                   
+                    if (index+1 == pitRocks){ 
+                        changlePlayer(2)
                     }
-                  
-                    // alert(nprevpit);
+
+                }else{
+                    
+                    // Landing on the big pit
+                    let nstore = $(".player-one.store").find("a").text();
+                    nstore++; // put a stone on the big pit
+                    $(".player-one.store").find("a").text(nstore);
+                    n2++;
+                    player1state = "Landed on Big Pit"
+
                 }
 
             }
-            else if((player2state === "playing") || (player2state === "Landed on Big Pit")){
-                let pitIndex = $(this).index('.player-two .pit');
-                let bigpitPosition = nPits - 1;
-                let n2 = nPits;
+            else{
+                pitLocationOnTheBoard--;
+                
+                let nprevpit = $(".player-one .pit:eq("+ pitLocationOnTheBoard +")").find("a").text()
+               
 
-                $(this).find("a").text(0);
+                // alert("pitvalue: "+pitValue+"; index: " + (index+1));
+                if ((pitRocks == index+1)){ 
+                    // alert("landed on own pit")
 
-                for (let index = 0; index < pitValue; index++) {
+                    if(nprevpit == 0){
+                        let nplayer2pit = $(".player-two .pit:eq("+ pitLocationOnTheBoard +")").find("a").text()
 
-                   
-                    if(pitIndex == bigpitPosition){ // He is on the big pit now 
+                        if(nplayer2pit > 0){
+                            let scoretoadd = parseInt(nplayer2pit) + 1;
+                        
+                            addScorePit("one",(scoretoadd));
 
-                        if (n2 < nPits) {
-                            
-                            // Landing on player 1 board
-
-                            let pit1index = n2;
-
-
-                            let nnextpit = $(".player-one .pit:eq("+ pit1index +")").find("a").text()
-
-                            nnextpit++; 
-                            
-                            changepitvalue("one", pit1index, nnextpit);
-                            n2--;
-
-
-                            if (index+1 == pitValue){ 
-                                changlePlayer(1) // change turn 
-                            }
-
-                        }else{
-                            
-                            // Landing on the big pit
-
-                            let nstore = $(".player-two.store").find("a").text();
-                            nstore++; // put a stone on the big pit
-                            $(".player-two.store").find("a").text(nstore);
-                            n2--;
-                            player2state = "Landed on Big Pit"
-
+                            changepitvalue("two", pitLocationOnTheBoard, 0);
+                            changepitvalue("one", pitLocationOnTheBoard, 0);
                         }
-
+                        else{
+                            nprevpit++;
+                            changepitvalue("one", pitLocationOnTheBoard, nprevpit)
+                        }
+                        
+                      
                     }
                     else{
-                        pitIndex++;
-                        
-                        let nprevpit = $(".player-two .pit:eq("+ pitIndex +")").find("a").text()                       
-
-                        // alert("pitvalue: "+pitValue+"; index: " + (index+1));
-
-                        if ((pitValue == index+1)){ 
-
-                            if(nprevpit == 0){
-                                let nplayer1pit = $(".player-one .pit:eq("+ pitIndex +")").find("a").text()
-
-                                if(nplayer1pit > 0){
-                                    let scoretoadd = parseInt(nplayer1pit) + 1;
-                                    addScorePit("two",(scoretoadd));
-                                    changepitvalue("one", pitIndex, 0);
-                                    changepitvalue("two", pitIndex, 0);
-                                }
-                                else{
-                                    nprevpit++;
-                                    
-                                    changepitvalue("two", pitIndex, nprevpit);
-                                }
-
-                               
-                            }
-                            else{
-                                nprevpit++;
-                                changepitvalue("two", pitIndex, nprevpit);
-                            }
-
-                            changlePlayer(1)
-                           
-                        }else{
-                            nprevpit++;
-                            changepitvalue("two", pitIndex, nprevpit);
-                               
-                        }
-
-                     
-                    
+                        nprevpit++;
+                        changepitvalue("one", pitLocationOnTheBoard, nprevpit);
                     }
+
+
+                    changlePlayer(2)
+
                   
-                    // alert(nprevpit);
+                   
+                }else{
+                    nprevpit++;
+                    changepitvalue("one", pitLocationOnTheBoard, nprevpit);
                 }
 
-            }    
+               
+            
+            }
+          
+            // alert(nprevpit);
         }
+     }
+
+     function PlayerTwoPlay(pitRocks,pitLocationOnTheBoard) {
+        let bigpitPosition = nPits - 1;
+        let n2 = nPits;
+
+        for (let index = 0; index < pitRocks; index++) {
+
+                   
+            if(pitLocationOnTheBoard == bigpitPosition){ // He is on the big pit now 
+
+                if (n2 < nPits) {
+                    
+                    // Landing on player 1 board
+
+                    let pit1index = n2;
+
+
+                    let nnextpit = $(".player-one .pit:eq("+ pit1index +")").find("a").text()
+
+                    nnextpit++; 
+                    
+                    changepitvalue("one", pit1index, nnextpit);
+                    n2--;
+
+
+                    if (index+1 == pitRocks){ 
+                        changlePlayer(1) // change turn 
+                    }
+
+                }else{
+                    
+                    // Landing on the big pit
+
+                    let nstore = $(".player-two.store").find("a").text();
+                    nstore++; // put a stone on the big pit
+                    $(".player-two.store").find("a").text(nstore);
+                    n2--;
+                    player2state = "Landed on Big Pit"
+
+                }
+
+            }
+            else{
+                pitLocationOnTheBoard++;
+                
+                let nprevpit = $(".player-two .pit:eq("+ pitLocationOnTheBoard +")").find("a").text()                       
+
+                // alert("pitvalue: "+pitValue+"; index: " + (index+1));
+
+                if ((pitRocks == index+1)){ 
+
+                    if(nprevpit == 0){
+                        let nplayer1pit = $(".player-one .pit:eq("+ pitLocationOnTheBoard +")").find("a").text()
+
+                        if(nplayer1pit > 0){
+                            let scoretoadd = parseInt(nplayer1pit) + 1;
+                            addScorePit("two",(scoretoadd));
+                            changepitvalue("one", pitLocationOnTheBoard, 0);
+                            changepitvalue("two", pitLocationOnTheBoard, 0);
+                        }
+                        else{
+                            nprevpit++;
+                            
+                            changepitvalue("two", pitLocationOnTheBoard, nprevpit);
+                        }
+
+                       
+                    }
+                    else{
+                        nprevpit++;
+                        changepitvalue("two", pitLocationOnTheBoard, nprevpit);
+                    }
+
+                    changlePlayer(1)
+                   
+                }else{
+                    nprevpit++;
+                    changepitvalue("two", pitLocationOnTheBoard, nprevpit);
+                       
+                }
+
+             
+            
+            }
+          
+            // alert(nprevpit);
+        }
+
+    }
+
+     $(".pit").on("click", function () {
+
+        if($(this).hasClass("inactive") || gameState != "started"){
+            let whois = checkplayeractive();
+            alert(whois + " time to play");        
+        }
+        else if((player1state === "playing") || (player1state === "Landed on Big Pit")){
+            const pitValue = $(this).find("a").text()
+            let pitIndex = $(this).index('.player-one .pit');
+
+            PlayerOnePlay(pitValue,pitIndex)
+            $(this).find("a").text(0);
+        }
+        else if((player2state === "playing") || (player2state === "Landed on Big Pit")){
+
+            const pitValue = $(this).find("a").text()
+            let pitIndex = $(this).index('.player-two .pit');
+
+            PlayerTwoPlay(pitValue,pitIndex)
+            $(this).find("a").text(0);
+        }
+               
      });
      
 
