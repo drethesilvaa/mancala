@@ -1,0 +1,35 @@
+.board{
+    background: #e0e0ff;
+    padding: 10px;
+}
+
+
+.store a{
+    width: 100%;
+    display: block;
+    text-align: center;
+    height: 100%;
+    border: 1px solid;
+    border-radius: 25px;
+    padding-top: 30px;
+}
+
+.pit , .store {
+    padding: 10px;
+}
+
+.pit a{
+    width: 100%;
+    display: block;
+    text-align: center;
+    height: 100px;
+    border: 1px solid;
+    border-radius: 25px;
+    padding-top: 30px;
+}
+
+.player.active{
+    text-decoration: underline;
+}
+
+.player
