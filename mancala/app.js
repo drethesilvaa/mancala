@@ -28,9 +28,7 @@ $(document).ready(function () {
 
     function addScorePit(player,score){
         let nstore = $(".player-"+ player +".store").find("a").text();
-        alert(nstore);
         let scoredisplay = parseInt(nstore) + parseInt(score);
-        alert(scoredisplay);
 
         $(".player-"+ player +".store").find("a").text(scoredisplay);
 
@@ -127,6 +125,7 @@ $(document).ready(function () {
 
         for (let index = 0; index < pitRocks; index++) {
 
+
             if(pitLocationOnTheBoard == 0){ // He is on the big pit now 
                 if (n2 > 0) {
                     
@@ -142,8 +141,17 @@ $(document).ready(function () {
                     changepitvalue("two", pit2index, nnextpit);
                     n2++;
 
-
+                    
                    
+
+                    // alert("n2-> " +  n2 + ". nPits ->" +nPits);
+
+                    if((n2 - 1) == nPits){
+
+                        pitLocationOnTheBoard = n2-1;
+
+                    }
+
                     if (index+1 == pitRocks){ 
                         changlePlayer(2)
                     }
@@ -166,7 +174,7 @@ $(document).ready(function () {
                 let nprevpit = $(".player-one .pit:eq("+ pitLocationOnTheBoard +")").find("a").text()
                
 
-                // alert("pitvalue: "+pitValue+"; index: " + (index+1));
+                // alert("pitRocks: "+pitRocks+"; index: " + (index+1));
                 if ((pitRocks == index+1)){ 
                     // alert("landed on own pit")
 
@@ -234,6 +242,11 @@ $(document).ready(function () {
                     changepitvalue("one", pit1index, nnextpit);
                     n2--;
 
+                    if((n2) == -1){
+
+                        pitLocationOnTheBoard = n2;
+
+                    }
 
                     if (index+1 == pitRocks){ 
                         changlePlayer(1) // change turn 
@@ -257,7 +270,6 @@ $(document).ready(function () {
                 
                 let nprevpit = $(".player-two .pit:eq("+ pitLocationOnTheBoard +")").find("a").text()                       
 
-                // alert("pitvalue: "+pitValue+"; index: " + (index+1));
 
                 if ((pitRocks == index+1)){ 
 
