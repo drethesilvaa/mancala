@@ -12,13 +12,20 @@ let player2state = ""
 
 $(document).ready(function () {
     
-    for (let index = 0; index < nPits; index++) {
-        
-        const stones = Math.floor(nStones/nPits);
 
-        appendPit("player-one",stones)
-        appendPit("player-two",stones)
+    renderPits();
+
+    
+    function renderPits(){
+        for (let index = 0; index < nPits; index++) {
+        
+            const stones = Math.floor(nStones/nPits);
+    
+            appendPit("player-one",stones)
+            appendPit("player-two",stones)
+        }
     }
+   
 
     function appendPit(player,nStones) { 
 
@@ -38,6 +45,11 @@ $(document).ready(function () {
         $(".player-"+ player +" .pit:eq("+ index +")").find("a").text(value);
     }
 
+    
+    function Getpitvalue(player,index) {
+        return $(".player-"+ player +" .pit:eq("+ index +")").find("a").text();
+    }
+
     function checkplayeractive() {
         if(player1state != ""){
             return "Player 1"
@@ -46,7 +58,75 @@ $(document).ready(function () {
         }
     }
 
+    function checkPits(player){
+        let totalscore = 0
+
+        for (let index = 0; index < nPits; index++) {
+            let pitvalue = Getpitvalue(player,index);
+            
+            totalscore = totalscore + parseInt(pitvalue);
+            
+        }
+
+        return totalscore;
+    }
+
+    function resetGame() {
+
+        $(".player-one.store").find("a").text(0);
+        $(".player-two.store").find("a").text(0);
+
+        $(".player").removeClass("active");
+
+        if ( $(".player-one .pit").hasClass("inactive")) {
+            $(".player-one .pit").removeClass("inactive");
+        }
+        if ( $(".player-two .pit").hasClass("inactive")) {
+            $(".player-two .pit").removeClass("inactive");
+        }
+
+        const stones = Math.floor(nStones/nPits);
+
+        $(".player-one .pit").find("a").text(stones);
+        $(".player-two .pit").find("a").text(stones);
+
+        player1state = ""
+        player2state = ""
+    }
+
+    function checkIfGameFinished() {
+        
+        let _player1score = checkPits("one")
+        let _player2score = checkPits("two")
+
+        let player1store = $(".player-one.store").find("a").text();
+        let player2store = $(".player-two.store").find("a").text();
+
+
+        if ((_player1score == 0) || (_player2score == 0) ) {
+            
+           player1store =+ _player1score;
+           player2store =+ _player2score;
+
+           if (player1store > player2store) GameFinished("Player 1 WIN!")
+           if (player1store < player2store) GameFinished("PLAYER 2 WIN")
+           if (player1store == player2store) GameFinished("ITS A DRAW")
+
+        }
+
+        return ""
+
+    }
+
+    function GameFinished(message) {       
+        alert(message);
+        resetGame();
+        
+    }
+
      function changlePlayer(playerID) {
+
+        let gamestatus = checkIfGameFinished()
 
         $(".player").removeClass("active");
 
@@ -79,7 +159,11 @@ $(document).ready(function () {
             default:
                 break;
         }
-
+        
+    
+        
+        
+       
      }
 
      $("#gamestart").on("click", function () {
@@ -93,29 +177,8 @@ $(document).ready(function () {
 
      });
 
-     $("#gamereset").on("click", function () {
-        
-        $(".player-one.store").find("a").text(0);
-        $(".player-two.store").find("a").text(0);
-
-        $(".player").removeClass("active");
-
-        if ( $(".player-one .pit").hasClass("inactive")) {
-            $(".player-one .pit").removeClass("inactive");
-        }
-        if ( $(".player-two .pit").hasClass("inactive")) {
-            $(".player-two .pit").removeClass("inactive");
-        }
-
-        const stones = Math.floor(nStones/nPits);
-
-        $(".player-one .pit").find("a").text(stones);
-        $(".player-two .pit").find("a").text(stones);
-
-        player1state = ""
-        player2state = ""
-
-
+     $("#gamereset").on("click", function () {      
+        resetGame()
      });
 
      function PlayerOnePlay(pitRocks,pitLocationOnTheBoard) {
@@ -164,6 +227,7 @@ $(document).ready(function () {
                     $(".player-one.store").find("a").text(nstore);
                     n2++;
                     player1state = "Landed on Big Pit"
+                    checkIfGameFinished()
 
                 }
 
@@ -173,10 +237,7 @@ $(document).ready(function () {
                 
                 let nprevpit = $(".player-one .pit:eq("+ pitLocationOnTheBoard +")").find("a").text()
                
-
-                // alert("pitRocks: "+pitRocks+"; index: " + (index+1));
                 if ((pitRocks == index+1)){ 
-                    // alert("landed on own pit")
 
                     if(nprevpit == 0){
                         let nplayer2pit = $(".player-two .pit:eq("+ pitLocationOnTheBoard +")").find("a").text()
@@ -215,7 +276,6 @@ $(document).ready(function () {
             
             }
           
-            // alert(nprevpit);
         }
      }
 
@@ -261,7 +321,7 @@ $(document).ready(function () {
                     $(".player-two.store").find("a").text(nstore);
                     n2--;
                     player2state = "Landed on Big Pit"
-
+                    checkIfGameFinished()
                 }
 
             }
@@ -307,7 +367,6 @@ $(document).ready(function () {
             
             }
           
-            // alert(nprevpit);
         }
 
     }
