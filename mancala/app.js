@@ -102,15 +102,15 @@ $(document).ready(function () {
         let player1store = $(".player-one.store").find("a").text();
         let player2store = $(".player-two.store").find("a").text();
 
+        if (_player1score === 0 || _player2score === 0 ) {
 
-        if ((_player1score == 0) || (_player2score == 0) ) {
-            
-           player1store =+ _player1score;
-           player2store =+ _player2score;
+           let player1final =  parseInt(player1store) + parseInt(_player1score);
+           let player2final = parseInt(player2store) + parseInt(_player2score);
 
-           if (player1store > player2store) GameFinished("Player 1 WIN!")
-           if (player1store < player2store) GameFinished("PLAYER 2 WIN")
-           if (player1store == player2store) GameFinished("ITS A DRAW")
+
+           if (player1final > player2final) GameFinished("Player 1 WIN!")
+           if (player1final < player2final) GameFinished("PLAYER 2 WIN")
+           if (player1final == player2final) GameFinished("ITS A DRAW")
 
         }
 
@@ -125,8 +125,6 @@ $(document).ready(function () {
     }
 
      function changlePlayer(playerID) {
-
-        let gamestatus = checkIfGameFinished()
 
         $(".player").removeClass("active");
 
@@ -203,9 +201,7 @@ $(document).ready(function () {
                     
                     changepitvalue("two", pit2index, nnextpit);
                     n2++;
-
-                    
-                   
+          
 
                     // alert("n2-> " +  n2 + ". nPits ->" +nPits);
 
@@ -227,7 +223,6 @@ $(document).ready(function () {
                     $(".player-one.store").find("a").text(nstore);
                     n2++;
                     player1state = "Landed on Big Pit"
-                    checkIfGameFinished()
 
                 }
 
@@ -277,6 +272,7 @@ $(document).ready(function () {
             }
           
         }
+
      }
 
      function PlayerTwoPlay(pitRocks,pitLocationOnTheBoard) {
@@ -321,7 +317,7 @@ $(document).ready(function () {
                     $(".player-two.store").find("a").text(nstore);
                     n2--;
                     player2state = "Landed on Big Pit"
-                    checkIfGameFinished()
+                   
                 }
 
             }
@@ -369,9 +365,11 @@ $(document).ready(function () {
           
         }
 
+
     }
 
      $(".pit").on("click", function () {
+
 
         if($(this).hasClass("inactive") || gameState != "started"){
             let whois = checkplayeractive();
@@ -392,6 +390,8 @@ $(document).ready(function () {
             PlayerTwoPlay(pitValue,pitIndex)
             $(this).find("a").text(0);
         }
+
+        checkIfGameFinished();
                
      });
      
