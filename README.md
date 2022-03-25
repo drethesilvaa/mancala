@@ -1,29 +1,40 @@
-# README #
+# MANCALA #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+This is an interactive mancala game that can be played right on your desktop!
 
-### What is this repository for? ###
+### Technologies Used ###
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* JQuery/JavaScript
+* HTML
+* CSS
+* https://www.youtube.com/watch?v=DT5rOzHFH7E - This Video as Base
 
-### How do I get set up? ###
+### Parameters ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+#### You can set two parameters:  ####
 
-### Contribution guidelines ###
+* Number of Pits
+* Number of stones per user
 
-* Writing tests
-* Code review
-* Other guidelines
+<br/>
 
-### Who do I talk to? ###
+```javascript
 
-* Repo owner or admin
-* Other community or team contact
+let nPits = 6; // number of pits for each user
+
+let nStones = 24;  // number of stones for each user
+
+```
+
+### Instructions ###
+
+* To Start the game you just need to press the " Start Game " button , and it will randomly select a player to start.
+
+* The selected player will have is name underlined.
+
+* If you want to restart the game just press " Reset ".
+
+### Time Taken To Finish ###
+
+Between 4 and 6 hours
+
