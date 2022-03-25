@@ -165,12 +165,18 @@ $(document).ready(function () {
      }
 
      $("#gamestart").on("click", function () {
-        const rand = Math.round(1 + Math.random() * 1) // Option so the first player is random 
-        alert("Player " + rand + " starts");
-
-        changlePlayer(rand);
-
-        gameState = "started"
+        if(gameState == "started"){
+             alert("The game already started"); 
+        }
+        else{
+            const rand = Math.round(1 + Math.random() * 1) // Option so the first player is random 
+            alert("Player " + rand + " starts");
+    
+            changlePlayer(rand);
+    
+            gameState = "started"
+        }
+      
         
 
      });
@@ -372,8 +378,12 @@ $(document).ready(function () {
 
 
         if($(this).hasClass("inactive") || gameState != "started"){
-            let whois = checkplayeractive();
-            alert(whois + " time to play");        
+
+            if(gameState == "started"){
+                let whois = checkplayeractive();
+                alert(whois + " time to play"); 
+            }     
+                   
         }
         else if((player1state === "playing") || (player1state === "Landed on Big Pit")){
             const pitValue = $(this).find("a").text()

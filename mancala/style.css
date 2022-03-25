@@ -1,6 +1,8 @@
 .board{
     background: #e0e0ff;
     padding: 10px;
+    box-shadow: rgb(100 100 111 / 20%) 0px 7px 29px 0px;
+    border-radius: 10px;
 }
 
 
@@ -28,8 +30,17 @@
     padding-top: 30px;
 }
 
+.pit a:hover , .pit a:active{
+    cursor: pointer;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+}
+
+.pit.inactive a:hover , .pit.inactive a:active{
+    box-shadow: unset;
+    cursor: not-allowed;
+}
+
 .player.active{
     text-decoration: underline;
 }
 
-.player
