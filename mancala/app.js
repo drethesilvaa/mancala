@@ -26,7 +26,6 @@ $(document).ready(function () {
         }
     }
    
-
     function appendPit(player,nStones) { 
 
         $(".pitsrow."+ player).append("<div class='pit col'><a>"+ nStones +"</a></div>");
@@ -114,7 +113,6 @@ $(document).ready(function () {
 
         }
 
-        return ""
 
     }
 
@@ -158,62 +156,38 @@ $(document).ready(function () {
                 break;
         }
         
-    
-        
-        
        
      }
-
-     $("#gamestart").on("click", function () {
-        if(gameState == "started"){
-             alert("The game already started"); 
-        }
-        else{
-            const rand = Math.round(1 + Math.random() * 1) // Option so the first player is random 
-            alert("Player " + rand + " starts");
-    
-            changlePlayer(rand);
-    
-            gameState = "started"
-        }
-      
-        
-
-     });
-
-     $("#gamereset").on("click", function () {      
-        resetGame()
-     });
 
      function PlayerOnePlay(pitRocks,pitLocationOnTheBoard) {
 
 
-        let n2 = 0;
+        let enemyboardindex = 0;
 
         for (let index = 0; index < pitRocks; index++) {
 
 
             if(pitLocationOnTheBoard == 0){ // He is on the big pit now 
-                if (n2 > 0) {
+                if (enemyboardindex > 0) {
                     
                     // Landing on player 2 board
 
-                    let pit2index = n2 - 1;
+                    let pit2index = enemyboardindex - 1;
 
 
-                    let nnextpit = $(".player-two .pit:eq("+ pit2index +")").find("a").text()
+                    let pit2Value = $(".player-two .pit:eq("+ pit2index +")").find("a").text()
 
-                    nnextpit++; 
+                    pit2Value++; 
                     
-                    changepitvalue("two", pit2index, nnextpit);
-                    n2++;
+                    changepitvalue("two", pit2index, pit2Value);
+                    enemyboardindex++;
           
 
                     // alert("n2-> " +  n2 + ". nPits ->" +nPits);
 
-                    if((n2 - 1) == nPits){
+                    if((enemyboardindex - 1) == nPits){
 
-                        pitLocationOnTheBoard = n2-1;
+                        pitLocationOnTheBoard = enemyboardindex-1;
 
                     }
 
@@ -227,7 +201,7 @@ $(document).ready(function () {
                     let nstore = $(".player-one.store").find("a").text();
                     nstore++; // put a stone on the big pit
                     $(".player-one.store").find("a").text(nstore);
-                    n2++;
+                    enemyboardindex++;
                     player1state = "Landed on Big Pit"
 
                 }
@@ -236,11 +210,11 @@ $(document).ready(function () {
             else{
                 pitLocationOnTheBoard--;
                 
-                let nprevpit = $(".player-one .pit:eq("+ pitLocationOnTheBoard +")").find("a").text()
+                let pit1Value = $(".player-one .pit:eq("+ pitLocationOnTheBoard +")").find("a").text()
                
                 if ((pitRocks == index+1)){ 
 
-                    if(nprevpit == 0){
+                    if(pit1Value == 0){
                         let nplayer2pit = $(".player-two .pit:eq("+ pitLocationOnTheBoard +")").find("a").text()
 
                         if(nplayer2pit > 0){
@@ -252,15 +226,15 @@ $(document).ready(function () {
                             changepitvalue("one", pitLocationOnTheBoard, 0);
                         }
                         else{
-                            nprevpit++;
-                            changepitvalue("one", pitLocationOnTheBoard, nprevpit)
+                            pit1Value++;
+                            changepitvalue("one", pitLocationOnTheBoard, pit1Value)
                         }
                         
                       
                     }
                     else{
-                        nprevpit++;
-                        changepitvalue("one", pitLocationOnTheBoard, nprevpit);
+                        pit1Value++;
+                        changepitvalue("one", pitLocationOnTheBoard, pit1Value);
                     }
 
 
@@ -269,8 +243,8 @@ $(document).ready(function () {
                   
                    
                 }else{
-                    nprevpit++;
-                    changepitvalue("one", pitLocationOnTheBoard, nprevpit);
+                    pit1Value++;
+                    changepitvalue("one", pitLocationOnTheBoard, pit1Value);
                 }
 
                
@@ -283,30 +257,30 @@ $(document).ready(function () {
 
      function PlayerTwoPlay(pitRocks,pitLocationOnTheBoard) {
         let bigpitPosition = nPits - 1;
-        let n2 = nPits;
+        let enemyboardindex = nPits;
 
         for (let index = 0; index < pitRocks; index++) {
 
                    
             if(pitLocationOnTheBoard == bigpitPosition){ // He is on the big pit now 
 
-                if (n2 < nPits) {
+                if (enemyboardindex < nPits) {
                     
                     // Landing on player 1 board
 
-                    let pit1index = n2;
+                    let pit1index = enemyboardindex;
 
 
-                    let nnextpit = $(".player-one .pit:eq("+ pit1index +")").find("a").text()
+                    let pit1value = $(".player-one .pit:eq("+ pit1index +")").find("a").text()
 
-                    nnextpit++; 
+                    pit1value++; 
                     
-                    changepitvalue("one", pit1index, nnextpit);
-                    n2--;
+                    changepitvalue("one", pit1index, pit1value);
+                    enemyboardindex--;
 
-                    if((n2) == -1){
+                    if((enemyboardindex) == -1){
 
-                        pitLocationOnTheBoard = n2;
+                        pitLocationOnTheBoard = enemyboardindex;
 
                     }
 
@@ -321,7 +295,7 @@ $(document).ready(function () {
                     let nstore = $(".player-two.store").find("a").text();
                     nstore++; // put a stone on the big pit
                     $(".player-two.store").find("a").text(nstore);
-                    n2--;
+                    enemyboardindex--;
                     player2state = "Landed on Big Pit"
                    
                 }
@@ -330,12 +304,12 @@ $(document).ready(function () {
             else{
                 pitLocationOnTheBoard++;
                 
-                let nprevpit = $(".player-two .pit:eq("+ pitLocationOnTheBoard +")").find("a").text()                       
+                let pit2value = $(".player-two .pit:eq("+ pitLocationOnTheBoard +")").find("a").text()                       
 
 
                 if ((pitRocks == index+1)){ 
 
-                    if(nprevpit == 0){
+                    if(pit2value == 0){
                         let nplayer1pit = $(".player-one .pit:eq("+ pitLocationOnTheBoard +")").find("a").text()
 
                         if(nplayer1pit > 0){
@@ -345,23 +319,23 @@ $(document).ready(function () {
                             changepitvalue("two", pitLocationOnTheBoard, 0);
                         }
                         else{
-                            nprevpit++;
+                            pit2value++;
                             
-                            changepitvalue("two", pitLocationOnTheBoard, nprevpit);
+                            changepitvalue("two", pitLocationOnTheBoard, pit2value);
                         }
 
                        
                     }
                     else{
-                        nprevpit++;
-                        changepitvalue("two", pitLocationOnTheBoard, nprevpit);
+                        pit2value++;
+                        changepitvalue("two", pitLocationOnTheBoard, pit2value);
                     }
 
                     changlePlayer(1)
                    
                 }else{
-                    nprevpit++;
-                    changepitvalue("two", pitLocationOnTheBoard, nprevpit);
+                    pit2value++;
+                    changepitvalue("two", pitLocationOnTheBoard, pit2value);
                        
                 }
 
@@ -374,7 +348,7 @@ $(document).ready(function () {
 
     }
 
-     $(".pit").on("click", function () {
+    $(".pit").on("click", function () {
 
 
         if($(this).hasClass("inactive") || gameState != "started"){
@@ -403,9 +377,28 @@ $(document).ready(function () {
 
         checkIfGameFinished();
                
-     });
-     
+    });
 
+    $("#gamestart").on("click", function () {
+        if(gameState == "started"){
+             alert("The game already started"); 
+        }
+        else{
+            const rand = Math.round(1 + Math.random() * 1) // Option so the first player is random 
+            alert("Player " + rand + " starts");
+    
+            changlePlayer(rand);
+    
+            gameState = "started"
+        }
+      
+        
+
+    });
+
+    $("#gamereset").on("click", function () {      
+        resetGame()
+    });
 
  
 
